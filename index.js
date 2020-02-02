@@ -1,3 +1,5 @@
+const execSync = require('child_process').execSync;
+
 exports.decorateTerm = (Term, { React, notify }) => {
     return class extends React.Component {
         constructor(props, context) {
@@ -74,10 +76,10 @@ exports.decorateTerm = (Term, { React, notify }) => {
                     'img', {
                     style: {
                         position: 'absolute',
-                        top: y + origin.top + 15,
+                        top: y +2 ,//+ origin.top, //+ 15,
                         left: 0,
                     },
-                    src: '/Users/rasukaru/Desktop/320x240.png',
+                    src: this.props.myState.filePath //'/Users/rasukaru/Desktop/320x240.png',
                     }
                 );
             }
@@ -105,18 +107,27 @@ exports.decorateTerm = (Term, { React, notify }) => {
     }
 }
 
+function getFilePath(data) {
+    // 下記の理由からHISTORYファイルを直接参照してimgcatの引数を取得する
+    //   - Hyperはcanvasで1文字ずつrenderするため、実行したコマンド(入力エリアの値)を取得することができない
+    //   - historyコマンドはbuiltin-commandなのでelectronアプリでは使用できない
+    //   - 上記同様の理由で$HISFILEが参照できない
+    //   - 最後に実行したコマンドを示す「!!」も使用不可
+    let lastExecCommand = execSync('cat ~/.zsh_history | tail -n 1').toString();
+    let home = execSync('echo $HOME | tr -d "\n"').toString();
+    let filePath = lastExecCommand.split(' ').pop().replace('~/', home+'/');
+    return filePath;
+}
+
 exports.middleware = store => next => (action) => {
     // console.log(action);
-    if (action.type === 'UPDATE_QUERY') {
-        console.log("っっっっっっっっっっk");
-        console.log(action);
-    }
     if (action.type === 'SESSION_ADD_DATA') {
         const { data } = action;
         if (detectImgCatCommand(data)) {
             store.dispatch({
                 type: 'HOOK_COMMAND',
                 message: 'what happen!?',
+                filePath: getFilePath(data),
             });
         } else {
             // store.dispatch({
@@ -134,10 +145,14 @@ exports.reduceUI = (state, action) => {
     switch (action.type) {
         case 'HOOK_COMMAND':
             if (state.myState === undefined) {
-                return state.set('myState', {message: ''});
+                return state.set('myState', {
+                    message: '',
+                    filePath: '',
+                });
             }
             return state.set('myState', {
                 message : action.message,
+                filePath: action.filePath,
             });
     }
     return state;
