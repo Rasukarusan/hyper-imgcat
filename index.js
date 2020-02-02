@@ -11,19 +11,19 @@ exports.decorateTerm = (Term, { React, notify }) => {
         }
 
         onDecorated(term) {
-            this._term = term;
             if (this.props.onDecorated) this.props.onDecorated(term);
-            if(this._term.termRef !== null) {
-                this._term.termRef.addEventListener(
-                    'keyup', event => this.handleKeyUp(event),
-                    false
-               );
-            }
+            this._term = term;
+            this._term.termRef.addEventListener(
+                'keyup', event => this.handleKeyUp(event),
+                false
+           );
         }
 
         handleKeyUp(event) {
             const {keyCode} = event;
+            // console.log(keyCode);
             if(keyCode === 13) { // ENTER
+                // console.log(this._term.term.textarea);
                 return;
             } else if (keyCode === 8) { // BACKSPACE
                 store.dispatch({
@@ -31,6 +31,9 @@ exports.decorateTerm = (Term, { React, notify }) => {
                     message: '',
                 });
             } else if (keyCode === 67) { // Ctrl+C
+            } else if (keyCode === 40) { // 矢印下
+                // console.log(this._term.term.getSelection());
+            } else if (keyCode === 81) { // q
             }
         }
 
@@ -39,49 +42,38 @@ exports.decorateTerm = (Term, { React, notify }) => {
           this._cursorFrame = cursorFrame;
         }
 
-        custom(term) {
-            if(term == null) return;
-            let imgView = React.createElement('div',null,'hoge');
+        createImageView() {
+            if (this.props.myState.message === '' || this._cursorFrame === null) return null;
+            const { x, y } = this._cursorFrame;
+            const origin = this._term.termRef.getBoundingClientRect();
+            let imgView = React.createElement(
+                'img',
+                { 
+                    style: {
+                        position: 'absolute',
+                        top: y + 2,
+                        left: 0,
+                        height: 'auto',
+                        maxWidth:'100%',
+                    },
+                    src: this.props.myState.filePath,
+                    id: 'tanakaImage'
+                },
+            );
 
-            this._container = term.termRef;
-            this._xTermScreen = this._container.querySelector('.xterm .xterm-screen');
-            const renderLayers = Array.from(this._xTermScreen.querySelectorAll('canvas'));
-
-            var para = document.createElement("div");
-            para.style.cssText = "background-color: rgba(255,0,0,0.3);"
-            var t = document.createTextNode("hogheohge");
-            para.appendChild(t);
-            // renderLayers[1].append(para)
-            // renderLayers[2].style.cssText = "background-color: rgba(255,0,0,0.3);"
-            for (const canvas of renderLayers) {
-                // console.log(canvas);
-                canvas.style.opacity = 1.0;
-            }
+            let hoge = document.getElementById('tanakaImage');
+            console.log(hoge);
+            return imgView;
         }
 
         render () {
             console.log("render");
-            if (this.props.myState === undefined) {
-                return React.createElement( Term, Object.assign({}, this.props));
-            }
             // console.log(this._term);
-            // this.custom(this._term);
-            let imgView = null;
-            if (this.props.myState.message !== '' && this._cursorFrame !== null) {
-                console.log("きたね");
-                // console.log(this.props.myState);
-                const { x, y } = this._cursorFrame;
-                const origin = this._term.termRef.getBoundingClientRect();
-                imgView = React.createElement(
-                    'img', {
-                    style: {
-                        position: 'absolute',
-                        top: y +2 ,//+ origin.top, //+ 15,
-                        left: 0,
-                    },
-                    src: this.props.myState.filePath //'/Users/rasukaru/Desktop/320x240.png',
-                    }
-                );
+            if (this.props.myState === undefined) {
+                return React.createElement( Term, Object.assign({}, this.props, {
+                        onDecorated: this.onDecorated,
+                        onCursorMove: this.onCursorMove,
+                }));
             }
 
             const children = [
@@ -91,7 +83,7 @@ exports.decorateTerm = (Term, { React, notify }) => {
                         onDecorated: this.onDecorated,
                         onCursorMove: this.onCursorMove,
                     })),
-                imgView,
+                this.createImageView(),
             ];
 
             return React.createElement(
