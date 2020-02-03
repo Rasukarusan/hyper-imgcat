@@ -169,11 +169,20 @@ exports.decorateTerm = (Term, { React, notify }) => {
     }
 }
 
+/**
+ * Get absolute path of the target image.
+ *
+ * Since "realpath" and "readlink" cannot be used in the Shell of Electron,
+ * "~/" is replaced with $HOME.
+ *
+ * @return string e.g.) /Users/you/foo.png
+ */
 function getFilePath() {
-    let lastExecCommand = execSync('cat ~/.zsh_history | tail -n 1').toString();
-    let home = execSync('echo $HOME | tr -d "\n"').toString();
-    let filePath = lastExecCommand.split(' ').pop().replace('~/', home+'/');
-    return filePath;
+    let lastExecCommand = execSync('tail -n 1 ~/.zsh_history').toString();
+    let home = execSync('echo $HOME | tr -d "\n"').toString() + '/';
+    let commands = lastExecCommand.split('imgcat');
+    let absolutePath = commands.pop().replace('~/', home);
+    return absolutePath;
 }
 
 exports.middleware = store => next => (action) => {
