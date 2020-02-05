@@ -107,7 +107,7 @@ exports.decorateTerm = (Term, { React, notify }) => {
                 { 
                     style: {
                         position: 'absolute',
-                        top: y + 2,
+                        top: y + origin.top/2,
                         left: 0,
                         height: 'auto',
                         maxWidth:'100%',
