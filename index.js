@@ -1,4 +1,4 @@
-const execSync = require('child_process').execSync;
+const { execSync, spawn } = require('child_process');
 const detectImgCatCommand = require('./detectCommand.js');
 
 exports.decorateTerm = (Term, { React, notify }) => {
@@ -26,9 +26,6 @@ exports.decorateTerm = (Term, { React, notify }) => {
         onCursorMove (cursorFrame) {
             if (this.props.onCursorMove) this.props.onCursorMove(cursorFrame);
             this._cursorFrame = cursorFrame;
-        }
-
-        componentDidUpdate(prevProps) {
         }
 
         /**
@@ -67,7 +64,6 @@ exports.decorateTerm = (Term, { React, notify }) => {
                     this.removeImageView();
                     break;
                 case 13: // ENTER
-
                     break;
                 case 67: // Ctrl+C
                     break;
@@ -75,7 +71,6 @@ exports.decorateTerm = (Term, { React, notify }) => {
                     this.newLine(100);
                     break;
                 case 39: // 矢印右
-                    execSync('clear');
                     break;
                 case 40: // 矢印下
                     break;
@@ -137,16 +132,19 @@ exports.decorateTerm = (Term, { React, notify }) => {
                     Object.assign({}, this.props, {
                         onDecorated: this.onDecorated,
                         onCursorMove: this.onCursorMove,
+                        cursorColor: this.props.myState.cursorColor
                     })),
                 this.createImageView(),
             ];
 
             return React.createElement(
                 'div',
-                {style: { 
-                    width: '100%', 
-                    height: '100%', 
-                    position: 'relative'}
+                {
+                    style: { 
+                        width: '100%', 
+                        height: '100%', 
+                        position: 'relative'
+                    },
                 },
                 children
             )
@@ -176,7 +174,7 @@ exports.middleware = store => next => (action) => {
         if (detectImgCatCommand(data)) {
             store.dispatch({
                 type: 'HOOK_COMMAND',
-                message: 'what happen!?',
+                message: 'imgcat is called',
                 filePath: getFilePath(),
                 cursorColor: 'rgba(0,0,0,0.0)',
             });
