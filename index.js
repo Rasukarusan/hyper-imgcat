@@ -6,6 +6,7 @@ exports.decorateTerm = (Term, { React, notify }) => {
         constructor(props, context) {
           super(props, context);
           this._term = null;
+          this._originCursorColor = props.cursorColor;
           this._cursorFrame = null;
           this._executedRow = 0;
           this._executedCommand = '';
@@ -52,6 +53,7 @@ exports.decorateTerm = (Term, { React, notify }) => {
                 type: 'HOOK_COMMAND',
                 message: '',
                 filePath: '',
+                cursorColor: this._originCursorColor,
             });
         }
 
@@ -176,6 +178,7 @@ exports.middleware = store => next => (action) => {
                 type: 'HOOK_COMMAND',
                 message: 'what happen!?',
                 filePath: getFilePath(),
+                cursorColor: 'rgba(0,0,0,0.0)',
             });
         } else {
             next(action);
@@ -192,11 +195,13 @@ exports.reduceUI = (state, action) => {
                 return state.set('myState', {
                     message: '',
                     filePath: '',
+                    cursorColor: 'blue',
                 });
             }
             return state.set('myState', {
                 message : action.message,
                 filePath: action.filePath,
+                cursorColor: action.cursorColor,
             });
     }
     return state;
@@ -212,11 +217,3 @@ const passProps = (uid, parentProps, props) => Object.assign(props, {
 
 exports.getTermGroupProps = passProps;
 exports.getTermProps = passProps;
-
-exports.decorateConfig = (config) => {
-    return Object.assign({}, config, {
-        // cursorColor: 'blue',
-        cursorColor: 'yellow',
-    })
-}
-
