@@ -48,7 +48,7 @@ exports.decorateTerm = (Term, { React, notify }) => {
             if(!imgView) return;
             store.dispatch({
                 type: 'HOOK_COMMAND',
-                message: '',
+                isCalledCommand: false,
                 filePath: '',
                 cursorColor: this._originCursorColor,
             });
@@ -93,7 +93,7 @@ exports.decorateTerm = (Term, { React, notify }) => {
         }
 
         createImageView() {
-            if (this.props.myState.message === '' || this._cursorFrame === null) return null;
+            if (!this.props.myState.isCalledCommand || this._cursorFrame === null) return null;
 
             // Insert a line break to keep the execution command on the display.
             // Hyper is designed so that if you insert a space-filling or line feed code that exceeds the width,
@@ -174,7 +174,7 @@ exports.middleware = store => next => (action) => {
         if (detectImgCatCommand(data)) {
             store.dispatch({
                 type: 'HOOK_COMMAND',
-                message: 'imgcat is called',
+                isCalledCommand: true,
                 filePath: getFilePath(),
                 cursorColor: 'rgba(0,0,0,0.0)',
             });
@@ -191,13 +191,13 @@ exports.reduceUI = (state, action) => {
         case 'HOOK_COMMAND':
             if (state.myState === undefined) {
                 return state.set('myState', {
-                    message: '',
+                    isCalledCommand: false,
                     filePath: '',
                     cursorColor: 'blue',
                 });
             }
             return state.set('myState', {
-                message : action.message,
+                isCalledCommand : action.isCalledCommand,
                 filePath: action.filePath,
                 cursorColor: action.cursorColor,
             });
