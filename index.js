@@ -1,4 +1,5 @@
 const execSync = require('child_process').execSync;
+const detectImgCatCommand = require('./detectCommand.js');
 
 exports.decorateTerm = (Term, { React, notify }) => {
     return class extends React.Component {
@@ -13,7 +14,6 @@ exports.decorateTerm = (Term, { React, notify }) => {
         }
 
         onDecorated(term) {
-            console.log(this.props);
             if (this.props.onDecorated) this.props.onDecorated(term);
             this._term = term;
             this._term.termRef.addEventListener(
@@ -45,57 +45,40 @@ exports.decorateTerm = (Term, { React, notify }) => {
             return this.getLineString(this._term.term._core, this._cursorFrame.row)
         }
 
+        removeImageView() {
+            let imgView = document.getElementById('tanakaImage');
+            if(!imgView) return;
+            store.dispatch({
+                type: 'HOOK_COMMAND',
+                message: '',
+                filePath: '',
+            });
+        }
+
         handleKeyUp(event) {
             const {keyCode} = event;
-            if(keyCode === 13) { // ENTER
-                console.log("ENTER");
-                console.log(this._term);
-                this._executedRow = this._cursorFrame.row;
-                this._executedCommand = this.getLineString(this._term.term._core, this._executedRow);
-                return;
-            } else if (keyCode === 8) { // BACKSPACE
-                store.dispatch({
-                    type: 'HOOK_COMMAND',
-                    message: '',
-                    filePath: '',
-                });
-            } else if (keyCode === 67) { // Ctrl+C
-            } else if (keyCode === 37) { // 矢印左
-                console.log("現在行:",this._cursorFrame.row);
-                console.log("現在行文字列:", this.getLineString(this._term.term._core, this._cursorFrame.row));
-                let buffer = this._term.term._core.buffers.normal;
-                let line = buffer.lines.get(this._cursorFrame.row);
-                let charData = [0, '', 1, 0];
-                this._term.term._core.textarea.value = "hoge"
-                // line.replaceCells(0, 100, charData);
-                // let blankLine = buffer.getBlankLine(0, true);
-                // this._term.term._core.buffers.normal.lines._array[this._cursorFrame.row] = blankLine;
-                console.log(this._term.term._core.buffers.normal.lines);
-                console.log(line);
-                console.log(line.get(1));
-            } else if (keyCode === 39) { // 矢印右
-                console.log("右");
-                let core = this._term.term._core
+            switch (keyCode) {
+                case 8: // BACKSPACE
+                    this.removeImageView();
+                    break;
+                case 81: // q
+                    this.removeImageView();
+                    break;
+                case 13: // ENTER
 
-                // store.dispatch({
-                //     type: 'SESSION_ADD_DATA',
-                //     data: '',
-                // });
-                // store.dispatch({
-                //     type: 'SESSION_PTY_DATA',
-                //     uid: this._term.props.uid,
-                //     data: 'hoge',
-                // });
-            // this._term.term._core.write(this.getLineString(this._term.term._core, this._cursorFrame.row));
-            } else if (keyCode === 40) { // 矢印下
-            } else if (keyCode === 81) { // q
-                let imgView = document.getElementById('tanakaImage');
-                if(!imgView) return;
-                store.dispatch({
-                    type: 'HOOK_COMMAND',
-                    message: '',
-                    filePath: '',
-                });
+                    break;
+                case 67: // Ctrl+C
+                    break;
+                case 37: // 矢印左
+                    this.newLine(100);
+                    break;
+                case 39: // 矢印右
+                    execSync('clear');
+                    break;
+                case 40: // 矢印下
+                    break;
+                default:
+                    break;
             }
         }
 
@@ -114,6 +97,7 @@ exports.decorateTerm = (Term, { React, notify }) => {
 
         createImageView() {
             if (this.props.myState.message === '' || this._cursorFrame === null) return null;
+
             // Insert a line break to keep the execution command on the display.
             // Hyper is designed so that if you insert a space-filling or line feed code that exceeds the width,
             // even if you hook with dispatch, the entered characters will remain.
@@ -138,7 +122,6 @@ exports.decorateTerm = (Term, { React, notify }) => {
         }
 
         render () {
-            console.log("render");
             if (this.props.myState === undefined) {
                 return React.createElement( Term, Object.assign({}, this.props, {
                         onDecorated: this.onDecorated,
@@ -186,7 +169,6 @@ function getFilePath() {
 }
 
 exports.middleware = store => next => (action) => {
-    // console.log(action);
     if (action.type === 'SESSION_ADD_DATA') {
         const { data } = action;
         if (detectImgCatCommand(data)) {
@@ -196,9 +178,6 @@ exports.middleware = store => next => (action) => {
                 filePath: getFilePath(),
             });
         } else {
-            // store.dispatch({
-            //     type: 'HOOK_COMMAND',
-            // });
             next(action);
         }
     }else {
@@ -241,13 +220,3 @@ exports.decorateConfig = (config) => {
     })
 }
 
-function detectImgCatCommand(data) {
-    const patterns = [
-        'zsh: command not found: imgcat',
-        'imgcat: command not found',
-        'command not found: imgcat',
-        'Unknown command \'imgcat\'',
-        '\'imgcat\' is not recognized*',
-    ];
-  return new RegExp('(' + patterns.join(')|(') + ')').test(data)
-}
