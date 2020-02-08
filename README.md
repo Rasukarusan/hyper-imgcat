@@ -46,5 +46,6 @@ localPlugins: [
 $ imgcat ~/Desktop/lion.jpg
 ```
 
-The image path must be specified as an absolute path.
+- The image path must be specified as an absolute path.
+- Press `BACKSPACE`
 
