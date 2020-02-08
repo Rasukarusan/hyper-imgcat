@@ -109,7 +109,6 @@ exports.decorateTerm = (Term, { React, notify }) => {
                     style: { 
                         width: '100%', 
                         height: '100%', 
-                        position: 'relative'
                     },
                 },
                 children
