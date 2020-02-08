@@ -18,14 +18,14 @@ Can be displayed on tmux.
 
 ## Install
 
-If you installed iTerm2 imgcat, please remove that before install hyper-imgcat.
+If you installed iTerm2 imgcat, please remove that before install hyper-imgcat.  
 Because this plugin hooks the words `command not found: imgcat`.
 
-### npm
+### ・npm
 
 Not ready. Please wait.
 
-### Manually
+### ・Manually
 
 1. Download hyper-imgcat.
 ```shell
