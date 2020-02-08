@@ -5,8 +5,8 @@ exports.decorateTerm = (Term, { React, notify }) => {
     return class extends React.Component {
         constructor(props, context) {
           super(props, context);
-          this._term = null;
           this._originCursorColor = props.cursorColor;
+          this._term = null;
           this._cursorFrame = null;
           this._executedRow = 0;
           this._executedCommand = '';
@@ -132,7 +132,7 @@ exports.decorateTerm = (Term, { React, notify }) => {
                     Object.assign({}, this.props, {
                         onDecorated: this.onDecorated,
                         onCursorMove: this.onCursorMove,
-                        cursorColor: this.props.myState.cursorColor
+                        cursorColor: this.props.myState.cursorColor,
                     })),
                 this.createImageView(),
             ];
