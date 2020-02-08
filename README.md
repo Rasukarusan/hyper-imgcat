@@ -21,19 +21,13 @@ Can be displayed on tmux.
 If you installed iTerm2 imgcat, please remove that before install hyper-imgcat.  
 Because this plugin hooks the words `command not found: imgcat`.
 
-### ・npm
-
-Not ready. Please wait.
-
-### ・Manually
-
-1. Download hyper-imgcat.
+Download hyper-imgcat.
 ```shell
 $ cd ~/.hyper_plugins/local
 $ git clone https://github.com/Rasukarusan/hyper-imgcat.git
 ```
 
-2. Add hyper-imgcat to localPlugins in `~/.hyper.js`.
+Add hyper-imgcat to localPlugins in `~/.hyper.js`.
 ```js
 localPlugins: [
   'hyper-imgcat',
