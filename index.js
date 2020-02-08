@@ -189,13 +189,6 @@ exports.middleware = store => next => (action) => {
 exports.reduceUI = (state, action) => {
     switch (action.type) {
         case 'HOOK_COMMAND':
-            if (state.myState === undefined) {
-                return state.set('myState', {
-                    isCalledCommand: false,
-                    filePath: '',
-                    cursorColor: 'blue',
-                });
-            }
             return state.set('myState', {
                 isCalledCommand : action.isCalledCommand,
                 filePath: action.filePath,
