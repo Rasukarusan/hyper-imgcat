@@ -47,5 +47,5 @@ $ imgcat ~/Desktop/lion.jpg
 ```
 
 - The image path must be specified as an absolute path.
-- Press `BACKSPACE`
+- Press `BACKSPACE`, the image will be hidden.
 
