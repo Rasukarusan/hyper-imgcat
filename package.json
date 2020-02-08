@@ -1,6 +1,6 @@
 {
   "name": "hyper-imgcat",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Extension for display images in terminal like iTerm2 imgcat in Hyper",
   "main": "index.js",
   "scripts": {
