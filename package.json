@@ -1,0 +1,26 @@
+{
+  "name": "hyper-imgcat",
+  "version": "1.0.0",
+  "description": "Extension for display images in terminal like iTerm2 imgcat in Hyper",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Rasukarusan/hyper-imgcat.git"
+  },
+  "keywords": [
+    "hyper",
+    "hyperterm",
+    "imgcat",
+    "hyper-plugin",
+    "hyper.app"
+  ],
+  "author": "Rasukarusan",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Rasukarusan/hyper-imgcat/issues"
+  },
+  "homepage": "https://github.com/Rasukarusan/hyper-imgcat#readme"
+}
