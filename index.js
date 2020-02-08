@@ -126,11 +126,27 @@ exports.decorateTerm = (Term, { React, notify }) => {
  * @return string e.g.) /Users/you/foo.png
  */
 function getFilePath() {
-    let lastExecCommand = execSync('tail -n 1 ~/.zsh_history').toString();
+    let lastExecCommand = execSync('tail ' + getHistoryPath() + ' | grep imgcat | tail -n 1').toString();
     let home = execSync('echo $HOME | tr -d "\n"').toString() + '/';
     let commands = lastExecCommand.split('imgcat');
     let absolutePath = commands.pop().replace('~/', home);
     return absolutePath;
+}
+
+/**
+ * Get history path of login shell.
+ *
+ * @return string
+ */
+function getHistoryPath() {
+    let shell = execSync('echo $SHELL').toString();
+    if (new RegExp('zsh').test(shell)) {
+        return '~/.zsh_history';
+    } else if (new RegExp('bash').test(shell)) {
+        return '~/.bash_history';
+    } else if (new RegExp('fish').test(shell)) {
+        return '~/.local/share/fish/fish_history';
+    }
 }
 
 exports.middleware = store => next => (action) => {
