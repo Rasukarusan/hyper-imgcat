@@ -28,7 +28,7 @@ exports.decorateTerm = (Term, { React, notify }) => {
         }
 
         removeImageView() {
-            let imgView = document.getElementById('tanakaImage');
+            let imgView = document.getElementById('imgcat-view');
             if(!imgView) return;
             store.dispatch({
                 type: 'HOOK_COMMAND',
@@ -79,7 +79,7 @@ exports.decorateTerm = (Term, { React, notify }) => {
                         maxWidth:'100%',
                     },
                     src: this.props.myState.filePath,
-                    id: 'tanakaImage'
+                    id: 'imgcat-view'
                 },
             );
         }
