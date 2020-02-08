@@ -10,7 +10,7 @@ Can be displayed on tmux.
 
 ## Demo
 
-![demo](https://user-images.githubusercontent.com/17779386/74077164-e35c1500-4a60-11ea-940c-1adf0f29e537.gif)
+![demo2](https://user-images.githubusercontent.com/17779386/74082540-618adc80-4a9e-11ea-85ba-5dfaa3c8f954.gif)
 
 ## Requirement
 
