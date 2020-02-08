@@ -10,6 +10,8 @@ Can be displayed on tmux.
 
 ## Demo
 
+![demo](https://user-images.githubusercontent.com/17779386/74077164-e35c1500-4a60-11ea-940c-1adf0f29e537.gif)
+
 ## Requirement
 
 - Hyper 3.02
