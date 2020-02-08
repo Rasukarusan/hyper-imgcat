@@ -1,4 +1,4 @@
-const { execSync, spawn } = require('child_process');
+const { execSync } = require('child_process');
 const detectImgCatCommand = require('./detectCommand.js');
 
 exports.decorateTerm = (Term, { React, notify }) => {
@@ -8,8 +8,6 @@ exports.decorateTerm = (Term, { React, notify }) => {
           this._originCursorColor = props.cursorColor;
           this._term = null;
           this._cursorFrame = null;
-          this._executedRow = 0;
-          this._executedCommand = '';
           this.onDecorated = this.onDecorated.bind(this);
           this.onCursorMove = this.onCursorMove.bind(this);
         }
@@ -27,21 +25,6 @@ exports.decorateTerm = (Term, { React, notify }) => {
         onCursorMove (cursorFrame) {
             if (this.props.onCursorMove) this.props.onCursorMove(cursorFrame);
             this._cursorFrame = cursorFrame;
-        }
-
-        /**
-         * Get string of the target line
-         *
-         * @param Terminal core Term.term._core
-         * @param int row
-         */
-        getLineString(core, row) {
-            let buffer = core.buffers.normal;
-            return buffer.translateBufferLineToString(row, false, 0, core.cols);
-        }
-
-        getCurrentLine() {
-            return this.getLineString(this._term.term._core, this._cursorFrame.row)
         }
 
         removeImageView() {
