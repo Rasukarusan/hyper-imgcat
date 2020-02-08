@@ -15,12 +15,13 @@ exports.decorateTerm = (Term, { React, notify }) => {
         }
 
         onDecorated(term) {
+            if (term === null) return;
             if (this.props.onDecorated) this.props.onDecorated(term);
             this._term = term;
             this._term.termRef.addEventListener(
                 'keyup', event => this.handleKeyUp(event),
                 false
-           );
+            );
         }
 
         onCursorMove (cursorFrame) {
