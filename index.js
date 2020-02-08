@@ -57,26 +57,8 @@ exports.decorateTerm = (Term, { React, notify }) => {
 
         handleKeyUp(event) {
             const {keyCode} = event;
-            switch (keyCode) {
-                case 8: // BACKSPACE
-                    this.removeImageView();
-                    break;
-                case 81: // q
-                    this.removeImageView();
-                    break;
-                case 13: // ENTER
-                    break;
-                case 67: // Ctrl+C
-                    break;
-                case 37: // 矢印左
-                    this.newLine(100);
-                    break;
-                case 39: // 矢印右
-                    break;
-                case 40: // 矢印下
-                    break;
-                default:
-                    break;
+            if (keyCode === 8) {
+                this.removeImageView();
             }
         }
 
